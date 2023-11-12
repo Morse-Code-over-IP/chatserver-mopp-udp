@@ -8,7 +8,7 @@ services:
       - 7373:7373/udp
     restart: always
     volumes:
-      - "logfiles:/opt/log"
+      - "logfile:/app/logfile.txt"
   frontail:
     restart: unless-stopped
     image: ghcr.io/8ch9azbsfifz/frontail:latest
@@ -16,7 +16,7 @@ services:
     depends_on:
       - mopp_chat_server
     volumes:
-      - "logfiles:/opt/log"
+      - "logfile:/opt/log/logfile.txt"
     ports:
       - "8001:9001"
 volumes:

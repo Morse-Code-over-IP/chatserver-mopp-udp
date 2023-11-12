@@ -39,7 +39,7 @@ def debug(s):
   if DEBUG:
     print(datetime.now().strftime("%d-%m-%Y, %H:%M:%S -") + s)
     if LOG:
-      logfile = open("MOPPLog.txt","a")
+      logfile = open("logfile.txt","a")
       logfile.write((datetime.now().strftime("%d-%m-%Y, %H:%M:%S -") + s+"\n"))
       logfile.close()
       
