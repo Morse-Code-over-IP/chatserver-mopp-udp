@@ -24,8 +24,13 @@ If client is inactive (not transmitting) for too long, it will be dropped from t
 
 You can also force disconnection by sending ":bye".
 
+## Modifications (SIGBIT)
+There are some additional server commands, such as activating / deactivating echo mode for testing purposes by sending :EM (---... . --). The server will respond by sending you the current state, either ON (--- -.) or OFF (--- ..-. ..-.). Usually the sending user is excluded from receiving his / her own transmissions. In echo mode, own transmissions are sent back to the sending user as well. This is not suitable for actual communication, but may be helpfull for testing / debugging purposes. Please note that this is a server setting which affects all users.
+
+When sending the command :USR (---... ..- ... .-.), the server will report the number of currently active users.
+
 
 
 # References
-- m32-chat-server by https://github.com/sp9wpn/m32_chat_server
-- sigbit by https://github.com/tuxintrouble/sigbit
+- Original m32-chat-server by https://github.com/sp9wpn/m32_chat_server
+- ReImplementation sigbit by https://github.com/tuxintrouble/sigbit
