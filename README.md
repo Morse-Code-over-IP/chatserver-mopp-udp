@@ -32,5 +32,5 @@ When sending the command :USR (---... ..- ... .-.), the server will report the n
 
 
 # References
-- Original m32-chat-server by https://github.com/sp9wpn/m32_chat_server
-- ReImplementation sigbit by https://github.com/tuxintrouble/sigbit
+- Original m32-chat-server by https://github.com/sp9wpn/m32_chat_server by SP9WPN
+- ReImplementation https://github.com/tuxintrouble/sigbit by Sebastian Stetter, DJ5SE
