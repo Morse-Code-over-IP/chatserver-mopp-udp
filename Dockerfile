@@ -2,7 +2,6 @@ FROM python:3
 
 RUN mkdir /opt/log
 WORKDIR /app
-ADD requirements.txt /app
 ADD *.py /app/
 
 #ENTRYPOINT [ "python3", "./MOPP_Chat_server.py", "|", "tee", "/opt/log/logfile.txt" ]
