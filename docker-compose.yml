@@ -1,7 +1,7 @@
 version: '3'
 services:
   mopp_chat_server:
-    image: ghcr.io/morse-code-over-ip/chatserver-mopp-udp:latest
+    image: ghcr.io/morse-code-over-ip/chatserver-mopp-udp:sha-da06e4a
     #build: .
     container_name: mopp_chat_server
     ports: 
@@ -20,4 +20,4 @@ services:
     ports:
       - "8001:9001"
 volumes:
-  logfiles:
+  logfile:
