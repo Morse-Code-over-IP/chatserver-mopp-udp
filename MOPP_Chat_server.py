@@ -13,7 +13,7 @@ import socket
 import time
 import struct
 from math import ceil
-from util import encode, decode, zfill, ljust, ditlen
+from mopp import encode, decode, zfill, ljust, ditlen
 from datetime import datetime
 
 SERVER_IP = "0.0.0.0"
