@@ -1,5 +1,0 @@
-pyserial 
-sounddevice 
-appdirs 
-numpy
-tk
