@@ -1,2 +1,4 @@
 .DS_Store
 __pycache__/util.cpython-311.pyc
+mopp-clients-udp/__pycache__/beep.cpython-311.pyc
+mopp-clients-udp/__pycache__/mopp.cpython-311.pyc
