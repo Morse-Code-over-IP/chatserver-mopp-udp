@@ -22,7 +22,7 @@ CLIENT_TIMEOUT = 60*5 #seconds
 MAX_CLIENTS = 10
 KEEPALIVE = 10
 DEBUG = 1
-LOG = 1
+LOG = 1 # write logs to logs/logfile.txt
 ECHO = False
 
 serversock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)

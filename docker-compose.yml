@@ -1,14 +1,14 @@
 version: '3'
 services:
   mopp_chat_server:
-    image: ghcr.io/morse-code-over-ip/chatserver-mopp-udp:sha-da06e4a
+    image: ghcr.io/morse-code-over-ip/chatserver-mopp-udp:latest
     #build: .
     container_name: mopp_chat_server
     ports: 
       - 7373:7373/udp
     restart: always
     volumes:
-      - "logfile:/app/logfile.txt"
+      - "logfile:/app/logs"
   frontail:
     restart: unless-stopped
     image: ghcr.io/8ch9azbsfifz/frontail:latest
@@ -16,7 +16,7 @@ services:
     depends_on:
       - mopp_chat_server
     volumes:
-      - "logfile:/opt/log/logfile.txt"
+      - "logfile:/opt/log"
     ports:
       - "8001:9001"
 volumes:
