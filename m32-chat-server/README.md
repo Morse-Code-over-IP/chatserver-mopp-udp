@@ -1,0 +1,1 @@
+This is an updated version of the original chat server by SP9WPN (https://github.com/sp9wpn/m32_chat_server)
