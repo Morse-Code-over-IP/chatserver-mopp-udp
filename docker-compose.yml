@@ -1,0 +1,10 @@
+version: '3'
+services:
+ mopp_chat_server:
+  #image: mopp_chat_server
+  build: .
+  container_name: mopp_chat_server
+  ports: 
+    - 7373:7373/udp
+  restart: always
+
