@@ -1,0 +1,1 @@
+- add generator https://github.com/marketplace/actions/generate-plantuml
