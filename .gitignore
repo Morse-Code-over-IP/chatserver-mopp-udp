@@ -2,3 +2,4 @@
 __pycache__/*
 mopp-clients-udp/__pycache__/*
 logs/logfile.txt
+.venv/*
