@@ -15,6 +15,7 @@ import struct
 from math import ceil
 from mopp import encode, decode, zfill, ljust, ditlen
 from datetime import datetime
+import sys
 
 SERVER_IP = "0.0.0.0"
 UDP_PORT = 7373
@@ -38,6 +39,8 @@ serial = 1
 def debug(s):
   if DEBUG:
     print(datetime.now().strftime("%d-%m-%Y, %H:%M:%S -") + s)
+    sys.stdout.flush() # TODO: uses logging
+
     if LOG:
       logfile = open("logs/logfile.txt","a")
       logfile.write((datetime.now().strftime("%d-%m-%Y, %H:%M:%S -") + s+"\n"))
