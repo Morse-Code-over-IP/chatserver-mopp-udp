@@ -39,7 +39,7 @@ serial = 1
 def debug(s):
   if DEBUG:
     print(datetime.now().strftime("%d-%m-%Y, %H:%M:%S -") + s)
-    sys.stdout.flush() # TODO: uses logging
+    sys.stdout.flush() # TODO: use logging
 
     if LOG:
       logfile = open("logs/logfile.txt","a")
