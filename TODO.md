@@ -1,1 +1,2 @@
 - check keepalives
+- move chatserver encode and decode to python lib
