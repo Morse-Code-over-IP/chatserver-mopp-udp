@@ -1,2 +1,3 @@
 - check keepalives
 - move chatserver encode and decode to python lib
+- update pypi module once released (do testing any more ;)

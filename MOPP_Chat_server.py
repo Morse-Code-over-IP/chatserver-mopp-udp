@@ -1,13 +1,12 @@
 #!/usr/local/bin/python3
 #
-# This file is part of the sigbit project
+# This file was originally part of the sigbit project
 # https://github.com/tuxintrouble/sigbit
 # Author: Sebastian Stetter, DJ5SE
 # License: GNU GENERAL PUBLIC LICENSE Version 3
 # 
 # Implements a chat server for the MOPP - morse over packet protocol
-# on PC
-# uses code fragments from https://github.com/sp9wpn/m32_chat_server
+# and uses additional code fragments from https://github.com/sp9wpn/m32_chat_server
 
 import socket
 import time
