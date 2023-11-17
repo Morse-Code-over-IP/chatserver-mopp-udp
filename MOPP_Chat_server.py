@@ -18,10 +18,10 @@ import sys
 import os
 
 SERVER_IP = os.environ.get('SERVER_IP', "0.0.0.0")
-UDP_PORT = int(os.environ.get('UDP_PORT', 7373))
-CLIENT_TIMEOUT = int(os.environ.get('CLIENT_TIMEOUT', 300)) # seconds
-MAX_CLIENTS = int(os.environ.get('MAX_CLIENTS', 10))
-KEEPALIVE = int(os.environ.get('KEEPALIVE', 10))
+UDP_PORT = int(os.environ.get('UDP_PORT', "7373"))
+CLIENT_TIMEOUT = int(os.environ.get('CLIENT_TIMEOUT', "300")) # seconds
+MAX_CLIENTS = int(os.environ.get('MAX_CLIENTS', "10"))
+KEEPALIVE = int(os.environ.get('KEEPALIVE', "10"))
 DEBUG = 1
 LOG = 1 # write logs to logs/logfile.txt
 ECHO = False
