@@ -2,7 +2,7 @@ version: '3'
 services:
   mopp_chat_server:
     image: ghcr.io/morse-code-over-ip/chatserver-mopp-udp:latest
-    #build: .
+    #build: . # use this instead of image, if you do not want to use the gchr.io repo
     container_name: mopp_chat_server
     ports: 
       - 7373:7373/udp
