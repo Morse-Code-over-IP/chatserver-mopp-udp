@@ -1,3 +1,5 @@
 - check keepalives
 - move chatserver encode and decode to python lib
 - update pypi module once released (do testing any more ;)
+- add sigbit server without dependencies for reference
+- add esp32 server for reference 
