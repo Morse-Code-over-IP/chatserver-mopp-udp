@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 #
 # This file was originally part of the sigbit project
 # https://github.com/tuxintrouble/sigbit
@@ -80,15 +80,13 @@ def encode_buffer(buffer,wpm):
   return res.encode('utf-8') #convert string of characters to bytes
 
 
-def decode_header(unicodestring):
+def decode_header(bytestring):
   '''converts a received morse code byte string and returns a list
   with the header info [protocol_v, serial, wpm]''' 
-  #bytestring = unicodestring.decode("utf-8")
-  bytestring = unicodestring.decode("utf-8", errors='ignore')
   bitstring = ''
   
   for byte in bytestring:
-    bitstring += zfill(bin(ord(byte))[2:],8) #works in uPython
+    bitstring += zfill(bin(byte)[2:],8) #works in uPython
   debug(bitstring)#check content
   m_protocol = int(bitstring[:2],2)
   m_serial = int(bitstring[3:8],2)
@@ -97,14 +95,13 @@ def decode_header(unicodestring):
   return [m_protocol, m_serial, m_wpm]
 
 
-def decode_payload(unicodestring):
+def decode_payload(bytestring):
   '''converts a received morse code byte string to text'''
-  bytestring = unicodestring.decode("utf-8", errors='ignore')
   bitstring = ''
 	
   for byte in bytestring:
     #convert byte to 8bits
-    bitstring += zfill(bin(ord(byte))[2:],8) #works in uPython
+    bitstring += zfill(bin(byte)[2:],8) #works in uPython
 
   m_payload = bitstring[14:] #we just need the payload here
 
