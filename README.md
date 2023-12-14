@@ -32,6 +32,9 @@ Simple chat server for [Morserino-32](https://github.com/oe1wkl/Morserino-32) us
   Please note that this is a server setting which affects all users.
 + When sending the command **:USR** (---... ..- ... .-.), the server will report the number of currently active users.
 
+# Is there any demo server?
+Yes, there is. You can connect your morserino to mopp.hamradio.pl:7373. Please just do not expect any high availability of this service.
+
 # References
 - Original [m32-chat-server](https://github.com/sp9wpn/m32_chat_server) by Wojtek, SP9WPN
 - ReImplementation [SigBit](https://github.com/tuxintrouble/sigbit) by Sebastian Stetter, DJ5SE
