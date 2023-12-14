@@ -79,42 +79,28 @@ def encode_buffer(buffer,wpm):
     
   return res.encode('utf-8') #convert string of characters to bytes
 
+def decode_mopp(data):
+  '''converts a received udp data to mopp structure and return complete list of the data'''
+  bits = ''
+  b_payload = []
+  for byte in data:
+    bits += zfill(bin(byte)[2:],8)
+  m_protocol = int(bits[:2],2)
+  m_serial = int(bits[3:8],2)
+  m_wpm = int(bits[9:14],2)
+  m_payload = bits[14:]
 
-def decode_header(bytestring):
-  '''converts a received morse code byte string and returns a list
-  with the header info [protocol_v, serial, wpm]''' 
-  bitstring = ''
-  
-  for byte in bytestring:
-    bitstring += zfill(bin(byte)[2:],8) #works in uPython
-  debug(bitstring)#check content
-  m_protocol = int(bitstring[:2],2)
-  m_serial = int(bitstring[3:8],2)
-  m_wpm = int(bitstring[9:14],2)
-		
-  return [m_protocol, m_serial, m_wpm]
-
-
-def decode_payload(bytestring):
-  '''converts a received morse code byte string to text'''
-  bitstring = ''
-	
-  for byte in bytestring:
-    #convert byte to 8bits
-    bitstring += zfill(bin(byte)[2:],8) #works in uPython
-
-  m_payload = bitstring[14:] #we just need the payload here
-
-  buffer = []
   for i in range(0, len(m_payload),2):
     el = m_payload[i]+m_payload[i+1]
-    buffer.append(el)
+    b_payload.append(el)
 
-  while buffer[-1] == "00": #remove surplus '00' elements
-    buffer.pop()
+  while b_payload[-1] == "00": #remove surplus '00' elements
+    b_payload.pop()
 
-  return buffer
+  if b_payload[-1] != "11": #for some reason morserino is not always sending EOW
+    b_payload.append("11")
 
+  return m_protocol, m_serial, m_wpm, decode(b_payload)
 
 def broadcast(data,client):
   global ECHO
@@ -150,44 +136,39 @@ while KeyboardInterrupt:
       receivers[client] = time.time()
       debug("heartbeat detected from %s " % client)
       continue
-    
-    if client in receivers and data != b'':
-      speed = decode_header(data)[2]
-      if decode_payload(data) == encode(':qrt'):
-        serversock.sendto(encode_buffer(encode('bye'),speed), addr)
-        del receivers[client]
-        debug ("Removing client %s on request" % client)
 
-      elif decode_payload(data) == encode(':em'):
-        if ECHO:
-          ECHO = False
-          serversock.sendto(encode_buffer(encode('off'),speed), addr)
-        else:
-          ECHO = True
-          serversock.sendto(encode_buffer(encode('on'),speed), addr)
+    if data != b'':
+      proto, speed, serial, payload = decode_mopp(data)
+      if client in receivers:
+        if payload == encode(':qrt '):
+          serversock.sendto(encode_buffer(encode('bye'),speed), addr)
+          del receivers[client]
+          debug ("Removing client %s on request" % client)
 
-      elif decode_payload(data) == encode(':usr'):
-        serversock.sendto(encode_buffer(encode('%i users'%len(receivers)),speed), addr)
+        elif payload == ':em ':
+          if ECHO:
+            ECHO = False
+            serversock.sendto(encode_buffer(encode('off'),speed), addr)
+          else:
+            ECHO = True
+            serversock.sendto(encode_buffer(encode('on'),speed), addr)
+
+        elif payload == ':usr ':
+          serversock.sendto(encode_buffer(encode('%i users'%len(receivers)),speed), addr)
       
-      else:
-        broadcast (data, client)
-        receivers[client] = time.time()
-    elif data != b'':
-      speed = decode_header(data)[2]
-      if decode_payload(data) == encode('hi'):
-        if (len(receivers) < MAX_CLIENTS):
+        else:
+          broadcast (data, client)
           receivers[client] = time.time()
-          if decode_payload(data) == encode('hi'):
-          	welcome(client, speed)
-        else:
-          reject(client, speed)
-          debug ("ERR: maximum clients reached- %s" %client)
-
       else:
-        pass
-        #debug ("-unknown client, ignoring- %s" %client)
+        if payload == 'hi ':
+          if (len(receivers) < MAX_CLIENTS):
+            receivers[client] = time.time()
+            if payload == 'hi ':
+            	welcome(client, speed)
+          else:
+            reject(client, speed)
+            debug ("ERR: maximum clients reached- %s" %client)
 
-      
     #send keepalives if not sent the last 10 secs
     for c in receivers.keys():
       if last_time_heartbeat + 10 < time.time():
