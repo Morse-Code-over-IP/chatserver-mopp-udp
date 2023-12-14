@@ -45,40 +45,33 @@ def debug(s):
       logfile = open("logs/logfile.txt","a")
       logfile.write((datetime.now().strftime("%d-%m-%Y, %H:%M:%S -") + s+"\n"))
       logfile.close()
-      
-def encode_buffer(buffer,wpm):
 
-  global protocol_version
-  global serial
-  '''creates an bytes for sending throught a socket'''
+def encode_mopp(protocol_version, serial, wpm, payload):
+  '''converts a received mopp structure and return bytestring to be sent to mopp'''
+  data_arr1 = []
+  data_str2 = ''
+  data_arr3 = bytearray()
 
-  #prevent overflow in wpm - we have only 6 bits in MOPP
   if wpm > 63:
       wpm = 63
 
-  #create 14 bit header
-  m = zfill(bin(protocol_version)[2:],2) #2bits for protocol_version
-  m += zfill(bin(serial)[2:],6) #6bits for serial number
-  m += zfill(bin(wpm)[2:],6) #6bits for words per minute
+  data_arr1.append(zfill(bin(protocol_version)[2:],2)) #2bits for protocol_version
+  data_arr1.append(zfill(bin(serial)[2:],6)) #6bits for serial number
+  data_arr1.append(zfill(bin(wpm)[2:],6)) #6bits for wpm
+  data_arr1 += encode(payload) # add complete endoded payload (dihs dahs)
 
-  #add payload
-  for el in buffer:
-    m += el
-    
-  m = ljust(m,int(8*ceil(len(m)/8.0)),'0') #fill in incomplete byte
-  res = ''
+  data_str2 = ''.join(data_arr1)
 
-  for i in range(0, len(m),8):
-    res += chr(int(m[i:i+8],2)) #convert 8bit chunks to integers and the to characters
+  l = len(data_str2)%8
+  if l:
+    for x in range(0, (8-l)):
+      data_str2 += "0"
 
-  #prevent overflow - we have only 6 bits MOPP
-  if serial < 62:
-    serial +=1
-  else:
-    serial = 0
-    
-  return res.encode('utf-8') #convert string of characters to bytes
+  for byte in [int(data_str2[i:i+8],2) for i in range(0, len(data_str2), 8)]:
+    data_arr3.append(byte)
 
+  return data_arr3
+ 
 def decode_mopp(data):
   '''converts a received udp data to mopp structure and return complete list of the data'''
   bits = ''
@@ -102,7 +95,7 @@ def decode_mopp(data):
 
   return m_protocol, m_serial, m_wpm, decode(b_payload)
 
-def broadcast(data,client):
+def broadcast(data, client):
   global ECHO
   for c in receivers.keys():
     if c == client and not ECHO:
@@ -113,12 +106,15 @@ def broadcast(data,client):
 
 def welcome(client, speed):
   ip,port = client.split(':')
-  serversock.sendto(encode_buffer(encode('welcome'),speed), addr)
+  serversock.sendto(encode_mopp(protocol_version, serial, speed, 'welcome '), addr)
+  serversock.sendto(encode_mopp(protocol_version, serial, speed, 'ur '), addr)
+  serversock.sendto(encode_mopp(protocol_version, serial, speed, 'wpm '), addr)
+  serversock.sendto(encode_mopp(protocol_version, serial, speed, str(speed)), addr)
   receivers[client] = time.time()
   time.sleep(2)
-  serversock.sendto(encode_buffer(encode('qrv'),speed), addr)
+  serversock.sendto(encode_mopp(protocol_version, serial, speed, 'qrv'), addr)
   time.sleep(ditlen(speed)*7)
-  serversock.sendto(encode_buffer(encode('%i' %len(receivers)),speed), addr)
+  serversock.sendto(encode_mopp(protocol_version, serial, speed, 'no users'), addr)
   debug("New client: %s" % client)
 
 def reject(client, speed):
@@ -138,23 +134,24 @@ while KeyboardInterrupt:
       continue
 
     if data != b'':
-      proto, speed, serial, payload = decode_mopp(data)
+      proto, serial, speed, payload = decode_mopp(data)
+      print(proto, speed, serial, payload)
       if client in receivers:
-        if payload == encode(':qrt '):
-          serversock.sendto(encode_buffer(encode('bye'),speed), addr)
+        if payload == ':qrt ':
+          serversock.sendto(encode_mopp(protocol_version, serial, speed, 'bye'), addr)
           del receivers[client]
           debug ("Removing client %s on request" % client)
 
         elif payload == ':em ':
           if ECHO:
             ECHO = False
-            serversock.sendto(encode_buffer(encode('off'),speed), addr)
+            serversock.sendto(encode_mopp(protocol_version, serial, speed, 'off'), addr)
           else:
             ECHO = True
-            serversock.sendto(encode_buffer(encode('on'),speed), addr)
+            serversock.sendto(encode_mopp(protocol_version, serial, speed, 'on'), addr)
 
         elif payload == ':usr ':
-          serversock.sendto(encode_buffer(encode('%i users'%len(receivers)),speed), addr)
+          serversock.sendto(encode_mopp(protocol_version, serial, speed, 'no users'), addr)
       
         else:
           broadcast (data, client)
