@@ -1,3 +1,4 @@
+0.0.11 - fixes for encoding
 0.0.10 - environment variables for configuration
 0.0.9 - flush logging
 0.0.6 - remove util.py and add dependency on mopp package (pypi testing yet)
